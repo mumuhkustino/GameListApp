@@ -25,6 +25,7 @@ struct GameDetailView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width,  alignment: .leading)
                                 .cornerRadius(10)
+                                .padding(EdgeInsets(top: paddingVerticalMedium, leading: 0, bottom: 0, trailing: 0))
                         } placeholder: {
                             placeHolderImage(width: 350, height: 150.0)
                         }
@@ -108,10 +109,11 @@ struct GameDetailView: View {
                             Text("\(gameDetailViewModel.gameDetail.description.replacingOccurrences(of: "\r\n", with:"")                                    .replacingOccurrences(of: "<p>", with: "").replacingOccurrences(of: "<br />", with: "").replacingOccurrences(of: "</p>", with: ""))").multilineTextAlignment(.leading)
                                 .font(Font.system(size:18))
                                 .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width,  alignment: .center)
-                                .padding(EdgeInsets(top: paddingVerticalSmall, leading: 0, bottom: 0, trailing: 0))
+                                .padding(EdgeInsets(top: paddingVerticalSmall, leading: 0, bottom: paddingVerticalMedium, trailing: 0))
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
+                .padding(-20)
             }
         }.onAppear {
                 self.gameDetailViewModel.loadGameDataById(id: self.gameId)
