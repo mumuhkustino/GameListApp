@@ -15,8 +15,6 @@ class AddGameFavoriteViewModel: ObservableObject {
     var gameDescription: String = ""
     var gameBackgroundImage: String = ""
     var gameBackgroundImageAdditional: String = ""
-//    var gameGenres: [GameGenre] = []
-//    var gamePublishers: [GamePublisher] = []
     
     private var gameFavoriteLocal: GameFavoriteLocal {
         let gameFavoriteLocal = GameFavoriteLocal(context: PersistenceController.shared.managedObjectContext)

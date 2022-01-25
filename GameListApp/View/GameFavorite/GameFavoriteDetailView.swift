@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct GameFavoriteDetailView: View {
-//    @State var isSaved: Bool = true
     var gameId: String
     var backgroundImage: String
-    @ObservedObject var gameDetailViewModel = LoadGameFavoriteDetailViewModel()
     @ObservedObject var addGameFavoriteViewModel = AddGameFavoriteViewModel()
     @ObservedObject var deleteGameFavoriteViewModel = DeleteGameFavoriteViewModel()
     @ObservedObject var loadGameFavoriteDetailViewModel = LoadGameFavoriteDetailViewModel()
@@ -80,47 +78,6 @@ struct GameFavoriteDetailView: View {
         }.onAppear {
             self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
         }.navigationBarTitle(Text(loadGameFavoriteDetailViewModel.gameFavorite.gameName), displayMode: .inline)
-            .navigationBarItems(trailing: self.loadGameFavoriteDetailViewModel.gameFavorite.gameId == 0 || self.loadGameFavoriteDetailViewModel.isFavorite == false ?
-                                Button(action: {
-                if self.loadGameFavoriteDetailViewModel.gameFavorite.gameId != 0 {
-                    self.addGameFavoriteViewModel.gameId = Int32(loadGameFavoriteDetailViewModel.gameFavorite.gameId)
-                    self.addGameFavoriteViewModel.gameName = loadGameFavoriteDetailViewModel.gameFavorite.gameName
-                    self.addGameFavoriteViewModel.gameRating = loadGameFavoriteDetailViewModel.gameFavorite.gameRating
-                    self.addGameFavoriteViewModel.gameReleased = loadGameFavoriteDetailViewModel.gameFavorite.gameReleased
-                    self.addGameFavoriteViewModel.gameDescription = loadGameFavoriteDetailViewModel.gameFavorite.gameDescription
-                    self.addGameFavoriteViewModel.gameBackgroundImage = loadGameFavoriteDetailViewModel.gameFavorite.gameBackgroundImage
-                    self.addGameFavoriteViewModel.gameBackgroundImageAdditional = loadGameFavoriteDetailViewModel.gameFavorite.gameBackgroundImageAdditional
-                    
-                    let saved = self.addGameFavoriteViewModel.addGameFavorite()
-                    if (saved) {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: saved)
-                    }
-                    self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
-                }
-            }) {
-                Image(systemName:"heart")
-            }
-                                : Button(action: {
-                if loadGameFavoriteDetailViewModel.gameFavorite.gameId != 0 {
-                    self.deleteGameFavoriteViewModel.gameId = self.loadGameFavoriteDetailViewModel.gameFavorite.gameId
-                    
-                    let removed = self.deleteGameFavoriteViewModel.deleteGameFavorite()
-                    if (removed == true) {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: false)
-                    } else {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: true)
-                    }
-                    self.loadGameFavoriteDetailViewModel.gameFavorite = GameFavorite(gameId: 0, gameName: "", gameRating: 0.0, gameReleased: "", gameDescription: "", gameBackgroundImage: "", gameBackgroundImageAdditional: "")
-//                    if (removed) {
-//                        self.isSaved = true
-//                    } else {
-//                        self.isSaved = false
-//                    }
-                }
-            }) {
-                Image(systemName: "heart.fill")
-            }
-            )
     }
 }
 

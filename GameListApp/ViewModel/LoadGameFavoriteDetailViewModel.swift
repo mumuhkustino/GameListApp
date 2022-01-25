@@ -11,7 +11,6 @@ class LoadGameFavoriteDetailViewModel: ObservableObject {
     
     @Published
     var gameFavorite  = GameFavorite(gameId: 0, gameName: "", gameRating: 0.0, gameReleased: "", gameDescription: "", gameBackgroundImage: "", gameBackgroundImageAdditional: "")
-    @Published var isFavorite: Bool = false
     @Published var loading: Bool = false
     
     func fetchGameFavoriteDetail(gameId: Int32) {
@@ -24,9 +23,5 @@ class LoadGameFavoriteDetailViewModel: ObservableObject {
             }
             self.gameFavorite = gameFavorite
         }
-    }
-    
-    func changeFavorite(isFavorite: Bool) {
-        self.isFavorite = isFavorite
     }
 }

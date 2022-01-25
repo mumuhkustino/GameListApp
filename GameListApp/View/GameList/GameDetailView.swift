@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameDetailView: View {
-//    @State var isSaved = false
+    @State var isSaved = true
     var gameId: String
     var backgroundImage: String
     @ObservedObject var gameDetailViewModel = GameDetailViewModel()
@@ -129,7 +129,7 @@ struct GameDetailView: View {
             self.gameDetailViewModel.loadGameDataById(id: self.gameId)
             self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
         }.navigationBarTitle(Text(gameDetailViewModel.gameDetail.name), displayMode: .inline)
-            .navigationBarItems(trailing: self.loadGameFavoriteDetailViewModel.gameFavorite.gameId == 0 || self.loadGameFavoriteDetailViewModel.isFavorite == false ?
+            .navigationBarItems(trailing: self.loadGameFavoriteDetailViewModel.gameFavorite.gameId == 0 || !self.isSaved ?
                                 Button(action: {
                 if self.gameDetailViewModel.gameDetail.id != 0 {
                     self.addGameFavoriteViewModel.gameId = Int32(self.gameDetailViewModel.gameDetail.id)
@@ -139,29 +139,9 @@ struct GameDetailView: View {
                     self.addGameFavoriteViewModel.gameDescription = self.gameDetailViewModel.gameDetail.description
                     self.addGameFavoriteViewModel.gameBackgroundImage = self.gameDetailViewModel.gameDetail.backgroundImage
                     self.addGameFavoriteViewModel.gameBackgroundImageAdditional = self.gameDetailViewModel.gameDetail.backgroundImageAdditional
-//                    var gameGenresLocal: [GameGenreLocal] = []
-//                    self.gameDetailViewModel.gameDetail.genres.forEach { gameGenre in
-//                        let newGameGenre = GameGenreLocal(context: PersistenceController.shared.managedObjectContext)
-//                        newGameGenre.genreId = Int32(gameGenre.id)
-//                        newGameGenre.genreName = gameGenre.name
-//                        gameGenresLocal.append(newGameGenre)
-//                    }
-//                    var gamePublishersLocal: [GamePublisherLocal] = []
-//                    self.gameDetailViewModel.gameDetail.publishers.forEach { gamePublisher in
-//                        let newGamePublisher = GamePublisherLocal(context: PersistenceController.shared.managedObjectContext)
-//                        newGamePublisher.publisherId = Int32(gamePublisher.id)
-//                        newGamePublisher.publisherName = gamePublisher.name
-//                        gamePublishersLocal.append(newGamePublisher)
-//                    }
-//                    self.addGameFavoriteViewModel.gameGenres = gameGenresLocal
-//                    self.addGameFavoriteViewModel.gamePublishers = gamePublishersLocal
-//                    self.addGameFavoriteViewModel.gameGenres = self.gameDetailViewModel.gameDetail.genres
-//                    self.addGameFavoriteViewModel.gamePublishers = self.gameDetailViewModel.gameDetail.publishers
-                    
+
                     let saved = self.addGameFavoriteViewModel.addGameFavorite()
-                    if (saved) {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: saved)
-                    }
+                    self.isSaved = saved
                     self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
                 }
             }) {
@@ -172,11 +152,7 @@ struct GameDetailView: View {
                     self.deleteGameFavoriteViewModel.gameId = Int32(self.gameDetailViewModel.gameDetail.id)
                     
                     let removed = self.deleteGameFavoriteViewModel.deleteGameFavorite()
-                    if (removed == true) {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: false)
-                    } else {
-                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: true)
-                    }
+                    self.isSaved = !removed
                     self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
                 }
             }) {
