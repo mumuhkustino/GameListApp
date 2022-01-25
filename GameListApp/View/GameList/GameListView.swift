@@ -28,7 +28,9 @@ struct GameListView: View {
                 }
             }
         }.onAppear {
-            self.gameViewModel.loadGameData()
+            if (self.gameViewModel.games.results.isEmpty) {
+                self.gameViewModel.loadGameData()
+            }
         }
     }
 }

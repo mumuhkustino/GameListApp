@@ -8,9 +8,19 @@
 import SwiftUI
 
 struct GameDetailView: View {
+//    @State var isSaved = false
     var gameId: String
     var backgroundImage: String
     @ObservedObject var gameDetailViewModel = GameDetailViewModel()
+    @ObservedObject var loadGameFavoriteDetailViewModel = LoadGameFavoriteDetailViewModel()
+    @ObservedObject var addGameFavoriteViewModel = AddGameFavoriteViewModel()
+    @ObservedObject var deleteGameFavoriteViewModel = DeleteGameFavoriteViewModel()
+    
+    init(gameId: String, backgroundImage: String) {
+        self.gameId = gameId
+        self.backgroundImage = backgroundImage
+    }
+    
     var body: some View {
         VStack(alignment: .center) {
             if (gameDetailViewModel.loading) {
@@ -71,7 +81,7 @@ struct GameDetailView: View {
                                             .padding(EdgeInsets(top: paddingVerticalVerySmall, leading: 0, bottom: 0, trailing: 0))
                                     }
                                 } .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .frame(height: 30)
+                                    .frame(height: 30)
                             }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         }
                         
@@ -116,8 +126,63 @@ struct GameDetailView: View {
                 .padding(-20)
             }
         }.onAppear {
-                self.gameDetailViewModel.loadGameDataById(id: self.gameId)
+            self.gameDetailViewModel.loadGameDataById(id: self.gameId)
+            self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
         }.navigationBarTitle(Text(gameDetailViewModel.gameDetail.name), displayMode: .inline)
+            .navigationBarItems(trailing: self.loadGameFavoriteDetailViewModel.gameFavorite.gameId == 0 || self.loadGameFavoriteDetailViewModel.isFavorite == false ?
+                                Button(action: {
+                if self.gameDetailViewModel.gameDetail.id != 0 {
+                    self.addGameFavoriteViewModel.gameId = Int32(self.gameDetailViewModel.gameDetail.id)
+                    self.addGameFavoriteViewModel.gameName = self.gameDetailViewModel.gameDetail.name
+                    self.addGameFavoriteViewModel.gameRating = self.gameDetailViewModel.gameDetail.rating
+                    self.addGameFavoriteViewModel.gameReleased = self.gameDetailViewModel.gameDetail.released
+                    self.addGameFavoriteViewModel.gameDescription = self.gameDetailViewModel.gameDetail.description
+                    self.addGameFavoriteViewModel.gameBackgroundImage = self.gameDetailViewModel.gameDetail.backgroundImage
+                    self.addGameFavoriteViewModel.gameBackgroundImageAdditional = self.gameDetailViewModel.gameDetail.backgroundImageAdditional
+//                    var gameGenresLocal: [GameGenreLocal] = []
+//                    self.gameDetailViewModel.gameDetail.genres.forEach { gameGenre in
+//                        let newGameGenre = GameGenreLocal(context: PersistenceController.shared.managedObjectContext)
+//                        newGameGenre.genreId = Int32(gameGenre.id)
+//                        newGameGenre.genreName = gameGenre.name
+//                        gameGenresLocal.append(newGameGenre)
+//                    }
+//                    var gamePublishersLocal: [GamePublisherLocal] = []
+//                    self.gameDetailViewModel.gameDetail.publishers.forEach { gamePublisher in
+//                        let newGamePublisher = GamePublisherLocal(context: PersistenceController.shared.managedObjectContext)
+//                        newGamePublisher.publisherId = Int32(gamePublisher.id)
+//                        newGamePublisher.publisherName = gamePublisher.name
+//                        gamePublishersLocal.append(newGamePublisher)
+//                    }
+//                    self.addGameFavoriteViewModel.gameGenres = gameGenresLocal
+//                    self.addGameFavoriteViewModel.gamePublishers = gamePublishersLocal
+//                    self.addGameFavoriteViewModel.gameGenres = self.gameDetailViewModel.gameDetail.genres
+//                    self.addGameFavoriteViewModel.gamePublishers = self.gameDetailViewModel.gameDetail.publishers
+                    
+                    let saved = self.addGameFavoriteViewModel.addGameFavorite()
+                    if (saved) {
+                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: saved)
+                    }
+                    self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
+                }
+            }) {
+                Image(systemName:"heart")
+            }
+                                : Button(action: {
+                if self.gameDetailViewModel.gameDetail.id != 0 {
+                    self.deleteGameFavoriteViewModel.gameId = Int32(self.gameDetailViewModel.gameDetail.id)
+                    
+                    let removed = self.deleteGameFavoriteViewModel.deleteGameFavorite()
+                    if (removed == true) {
+                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: false)
+                    } else {
+                        self.loadGameFavoriteDetailViewModel.changeFavorite(isFavorite: true)
+                    }
+                    self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
+                }
+            }) {
+                Image(systemName: "heart.fill")
+            }
+            )
     }
 }
 

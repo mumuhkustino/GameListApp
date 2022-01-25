@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 class GameListViewModel: ObservableObject {
     @Published var games = GameList(count: 0, next: "", results: [])
@@ -19,11 +20,14 @@ class GameListViewModel: ObservableObject {
     func loadGameData() {
         self.loading = true
         serviceProtocol.fetchGame { games in
-            self.loading = false
             guard let games = games else {
                 return
             }
-            self.games.results = games
+            
+            DispatchQueue.main.async {
+                self.loading = false
+                self.games.results = games
+            }
         }
     }
 }

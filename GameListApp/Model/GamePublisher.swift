@@ -7,12 +7,7 @@
 
 import Foundation
 
-struct GamePublisher: Codable, Identifiable {
-    var id: Int
-    var name: String
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-    }
+struct GamePublisher: Decodable, Identifiable {
+    let id: Int32
+    let name: String
 }

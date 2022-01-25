@@ -16,6 +16,11 @@ struct ContentView: View {
                     Image(systemName: "gamecontroller.fill")
                     Text("Games")
                 }
+                GameFavoriteListView()
+                    .tabItem {
+                        Image(systemName: "heart.fill")
+                        Text("Favorite")
+                }
                 AboutView()
                 .tabItem {
                     Image(systemName: "person.fill")

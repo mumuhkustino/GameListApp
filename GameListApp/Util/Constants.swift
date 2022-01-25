@@ -5,11 +5,9 @@
 //  Created by C-70 on 09/01/22.
 //
 
-import Foundation
 import SwiftUI
 
 let baseUrl = "https://api.rawg.io/api/"
-let apiKey = "a89cd1f6dd9340848b2ec020ad947985"
 let paddingHorizontalVerySmall: CGFloat = 4
 let paddingVerticalVerySmall: CGFloat = 4
 let paddingHorizontalSmall: CGFloat = 8
