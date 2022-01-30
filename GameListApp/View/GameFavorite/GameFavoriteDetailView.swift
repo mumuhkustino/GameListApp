@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct GameFavoriteDetailView: View {
-    @State var isSaved = true
+    @State var isFavorite: Bool = true
     var gameId: String
-    var backgroundImage: String
-    @ObservedObject var addGameFavoriteViewModel = AddGameFavoriteViewModel()
-    @ObservedObject var deleteGameFavoriteViewModel = DeleteGameFavoriteViewModel()
-    @ObservedObject var loadGameFavoriteDetailViewModel = LoadGameFavoriteDetailViewModel()
+    var bgImage: String
+    @ObservedObject var gameFavoriteDetailHelperViewModel = GameFavoriteDetailHelperViewModel()
+    @ObservedObject var gameFavoriteDetailViewModel = GameFavoriteDetailViewModel()
     
-    init(gameId: String, backgroundImage: String) {
+    init(gameId: String, bgImage: String) {
         self.gameId = gameId
-        self.backgroundImage = backgroundImage
+        self.bgImage = bgImage
     }
     
     var body: some View {
         VStack(alignment: .center) {
-            if (loadGameFavoriteDetailViewModel.loading) {
+            if (gameFavoriteDetailViewModel.loading) {
                 VStack(alignment: .center) {
                     LoadingIndicator(color: Color.blue, size: 50)
                 }
             } else {
                 List {
                     VStack(alignment: .leading) {
-                        AsyncImage(url: URL(string: "\(self.backgroundImage)")!) { image in
+                        AsyncImage(url: URL(string: "\(self.bgImage)")!) { image in
                             image.resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width,  alignment: .leading)
@@ -38,7 +37,7 @@ struct GameFavoriteDetailView: View {
                         } placeholder: {
                             placeHolderImage(width: 350, height: 150.0)
                         }
-                        Text(loadGameFavoriteDetailViewModel.gameFavorite.gameName)
+                        Text(gameFavoriteDetailViewModel.gameFavorite.name)
                             .foregroundColor(.blue)
                             .bold()
                             .lineLimit(2)
@@ -48,14 +47,14 @@ struct GameFavoriteDetailView: View {
                             Image(systemName: "star.fill")
                                 .foregroundColor(.yellow)
                                 .frame(width: 24.0, height: 24.0)
-                            Text(loadGameFavoriteDetailViewModel.gameFavorite.gameRating.format())
+                            Text(gameFavoriteDetailViewModel.gameFavorite.rating.format())
                                 .foregroundColor(Color.black)
                                 .padding(EdgeInsets(top: 0, leading: paddingHorizontalSmall, bottom: 0, trailing: 0))
                             Spacer()
                             Image(systemName: "calendar")
                                 .resizable()
                                 .frame(width: 20.0, height: 20.0)
-                            Text(loadGameFavoriteDetailViewModel.gameFavorite.gameReleased)
+                            Text(gameFavoriteDetailViewModel.gameFavorite.released)
                                 .foregroundColor(.black)
                                 .padding(EdgeInsets(top: 0, leading: paddingHorizontalSmall, bottom: 0, trailing: 0))
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -67,7 +66,7 @@ struct GameFavoriteDetailView: View {
                                 .lineLimit(0)
                                 .font(Font.system(size:20))
                                 .padding(EdgeInsets(top: paddingVerticalSmall, leading: 0, bottom: 0, trailing: 0))
-                            Text("\(loadGameFavoriteDetailViewModel.gameFavorite.gameDescription.replacingOccurrences(of: "\r\n", with:"")                                    .replacingOccurrences(of: "<p>", with: "").replacingOccurrences(of: "<br />", with: "").replacingOccurrences(of: "</p>", with: ""))").multilineTextAlignment(.leading)
+                            Text("\(gameFavoriteDetailViewModel.gameFavorite.desc.replacingOccurrences(of: "\r\n", with:"")                                    .replacingOccurrences(of: "<p>", with: "").replacingOccurrences(of: "<br />", with: "").replacingOccurrences(of: "</p>", with: ""))").multilineTextAlignment(.leading)
                                 .font(Font.system(size:18))
                                 .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width,  alignment: .center)
                                 .padding(EdgeInsets(top: paddingVerticalSmall, leading: 0, bottom: paddingVerticalMedium, trailing: 0))
@@ -77,30 +76,30 @@ struct GameFavoriteDetailView: View {
                 .padding(-20)
             }
         }.onAppear {
-            self.loadGameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
-        }.navigationBarTitle(Text(loadGameFavoriteDetailViewModel.gameFavorite.gameName), displayMode: .inline)
-            .navigationBarItems(trailing: self.isSaved == false ?
+            self.gameFavoriteDetailViewModel.fetchGameFavoriteDetail(gameId: Int32(self.gameId)!)
+        }.navigationBarTitle(Text(gameFavoriteDetailViewModel.gameFavorite.name), displayMode: .inline)
+            .navigationBarItems(trailing: isFavorite == false ?
                                 Button(action: {
-                if self.loadGameFavoriteDetailViewModel.gameFavorite.gameId != 0 {
-                    self.addGameFavoriteViewModel.gameId = Int32(self.loadGameFavoriteDetailViewModel.gameFavorite.gameId)
-                    self.addGameFavoriteViewModel.gameName = self.loadGameFavoriteDetailViewModel.gameFavorite.gameName
-                    self.addGameFavoriteViewModel.gameRating = self.loadGameFavoriteDetailViewModel.gameFavorite.gameRating
-                    self.addGameFavoriteViewModel.gameReleased = self.loadGameFavoriteDetailViewModel.gameFavorite.gameReleased
-                    self.addGameFavoriteViewModel.gameDescription = self.loadGameFavoriteDetailViewModel.gameFavorite.gameDescription
-                    self.addGameFavoriteViewModel.gameBackgroundImage = self.loadGameFavoriteDetailViewModel.gameFavorite.gameBackgroundImage
-                    self.addGameFavoriteViewModel.gameBackgroundImageAdditional = self.loadGameFavoriteDetailViewModel.gameFavorite.gameBackgroundImageAdditional
+                if self.gameFavoriteDetailViewModel.gameFavorite.id != 0 {
+                    self.gameFavoriteDetailHelperViewModel.idInsert = Int32(self.gameFavoriteDetailViewModel.gameFavorite.id)
+                    self.gameFavoriteDetailHelperViewModel.nameInsert = self.gameFavoriteDetailViewModel.gameFavorite.name
+                    self.gameFavoriteDetailHelperViewModel.ratingInsert = self.gameFavoriteDetailViewModel.gameFavorite.rating
+                    self.gameFavoriteDetailHelperViewModel.releasedInsert = self.gameFavoriteDetailViewModel.gameFavorite.released
+                    self.gameFavoriteDetailHelperViewModel.descInsert = self.gameFavoriteDetailViewModel.gameFavorite.desc
+                    self.gameFavoriteDetailHelperViewModel.backgroundImageInsert = self.gameFavoriteDetailViewModel.gameFavorite.backgroundImage
+                    self.gameFavoriteDetailHelperViewModel.backgroundImageAdditionalInsert = self.gameFavoriteDetailViewModel.gameFavorite.backgroundImageAdditional
                     
-                    let saved = self.addGameFavoriteViewModel.addGameFavorite()
-                    self.isSaved = saved
+                    let isFavorite = self.gameFavoriteDetailHelperViewModel.insertGameFavorite()
+                    self.isFavorite = isFavorite
                 }
             }){
                 Image(systemName: "heart")
             } : Button(action:{
-                if self.loadGameFavoriteDetailViewModel.gameFavorite.gameId != 0 {
-                    self.deleteGameFavoriteViewModel.gameId = self.loadGameFavoriteDetailViewModel.gameFavorite.gameId
+                if self.gameFavoriteDetailViewModel.gameFavorite.id != 0 {
+                    self.gameFavoriteDetailHelperViewModel.idDelete = self.gameFavoriteDetailViewModel.gameFavorite.id
                     
-                    let removed = self.deleteGameFavoriteViewModel.deleteGameFavorite()
-                    self.isSaved = !removed
+                    let isNotFavorite = self.gameFavoriteDetailHelperViewModel.deleteGameFavorite()
+                    self.isFavorite = !isNotFavorite
                 }
             }){
                 Image(systemName: "heart.fill")

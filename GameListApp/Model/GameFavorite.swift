@@ -5,14 +5,12 @@
 //  Created by C-70 on 16/01/22.
 //
 
-import Foundation
-
 struct GameFavorite {
-    var gameId: Int32
-    var gameName: String
-    var gameRating: Float
-    var gameReleased: String
-    var gameDescription: String
-    var gameBackgroundImage: String
-    var gameBackgroundImageAdditional: String
+    var id: Int32
+    var name: String
+    var rating: Float
+    var released: String
+    var desc: String
+    var backgroundImage: String
+    var backgroundImageAdditional: String
 }

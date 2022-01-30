@@ -7,15 +7,15 @@
 
 import Foundation
 
-class LoadGameFavoriteDetailViewModel: ObservableObject {
+class GameFavoriteDetailViewModel: ObservableObject {
     
     @Published
-    var gameFavorite  = GameFavorite(gameId: 0, gameName: "", gameRating: 0.0, gameReleased: "", gameDescription: "", gameBackgroundImage: "", gameBackgroundImageAdditional: "")
+    var gameFavorite  = GameFavorite(id: 0, name: "", rating: 0.0, released: "", desc: "", backgroundImage: "", backgroundImageAdditional: "")
     @Published var loading: Bool = false
     
     func fetchGameFavoriteDetail(gameId: Int32) {
         self.loading = true
-        PersistenceController.shared.getGameFavoriteDetail(gameId) {
+        PersistenceController.controllerHelper.selectGameFavoriteDetail(gameId) {
             gameFavorite in
             self.loading = false
             guard let gameFavorite = gameFavorite else {

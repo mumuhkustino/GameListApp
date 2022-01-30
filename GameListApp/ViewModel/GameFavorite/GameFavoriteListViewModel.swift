@@ -7,7 +7,7 @@
 
 import CoreData
 
-class LoadGameFavoriteListViewModel: ObservableObject {
+class GameFavoriteListViewModel: ObservableObject {
     
     @Published var gameFavorites = [GameFavoriteViewModel]()
     @Published var loading: Bool = false
@@ -20,7 +20,7 @@ class LoadGameFavoriteListViewModel: ObservableObject {
         self.loading = true
         DispatchQueue.main.async {
             self.loading = false
-            self.gameFavorites = PersistenceController.shared.getAllGameFavorite().map(GameFavoriteViewModel.init)
+            self.gameFavorites = PersistenceController.controllerHelper.selectAllGameFavorite().map(GameFavoriteViewModel.init)
         }
     }
 }

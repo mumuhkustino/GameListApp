@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameFavoriteListView: View {
-    @ObservedObject private var gameFavoriteListViewModel = LoadGameFavoriteListViewModel()
+    @ObservedObject private var gameFavoriteListViewModel = GameFavoriteListViewModel()
     
     var body: some View {
         VStack(alignment: .center) {
@@ -16,10 +16,10 @@ struct GameFavoriteListView: View {
                 LoadingIndicator(color: Color.blue, size: 50)
             } else {
                 if (gameFavoriteListViewModel.gameFavorites.count > 0) {
-                    List(gameFavoriteListViewModel.gameFavorites, id: \.gameId) { game in
+                    List(gameFavoriteListViewModel.gameFavorites, id: \.id) { game in
                         ZStack {
-                            GameFavoriteItem(game: game)
-                            NavigationLink(destination: GameFavoriteDetailView(gameId: "\(game.gameId)", backgroundImage: "\(game.gameBackgroundImage)")) {
+                            GameFavoriteItem(viewModel: game)
+                            NavigationLink(destination: GameFavoriteDetailView(gameId: "\(game.id)", bgImage: "\(game.backgroundImage)")) {
                                 EmptyView()
                             }.opacity(0)
                         }

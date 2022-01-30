@@ -6,16 +6,15 @@
 //
 
 import SwiftUI
-import CoreData
 
 @main
 struct GameListAppApp: App {
-    let persistence = PersistenceController.shared
+    let controllerHelper = PersistenceController.controllerHelper
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, persistence.managedObjectContext)
+                .environment(\.managedObjectContext, controllerHelper.managedObjectContext)
         }
     }
 }

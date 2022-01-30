@@ -5,9 +5,12 @@
 //  Created by C-70 on 09/01/22.
 //
 
-import Foundation
-
-struct GameGenre: Decodable, Identifiable {
-    let id: Int32
-    let name: String
+struct GameGenre: Codable, Identifiable {
+    var id: Int
+    var name: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+    }
 }

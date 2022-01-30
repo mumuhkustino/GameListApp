@@ -8,7 +8,7 @@
 import CoreData
 
 class PersistenceController {
-    static let shared = PersistenceController(managedObjectContext: NSManagedObjectContext.current)
+    static let controllerHelper = PersistenceController(managedObjectContext: NSManagedObjectContext.mocCurrent)
     
     var managedObjectContext: NSManagedObjectContext
 
@@ -16,51 +16,48 @@ class PersistenceController {
         self.managedObjectContext = managedObjectContext
     }
     
-    func addGameFavorite(gameFavorite: GameFavoriteLocal) throws {
+    func insertGameFavorite(gameFavorite: GameFavoriteLocal) throws {
         self.managedObjectContext.insert(gameFavorite)
         try self.managedObjectContext.save()
     }
     
-    func deleteGameFavorite(gameId: Int32) throws {
+    func deleteGameFavorite(id: Int32) throws {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "GameFavoriteLocal")
         fetchRequest.fetchLimit = 1
-        fetchRequest.predicate = NSPredicate(format: "gameId == \(gameId)")
+        fetchRequest.predicate = NSPredicate(format: "id == \(id)")
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeCount
         do {
             try self.managedObjectContext.execute(batchDeleteRequest)
-//            try self.container.viewContext.execute(batchDeleteRequest)
         } catch let error as NSError {
             print(error)
         }
     }
     
-    func getGameFavoriteDetail(_ gameId: Int32, completion: @escaping(GameFavorite?) -> ()) {
+    func selectGameFavoriteDetail(_ id: Int32, completion: @escaping(GameFavorite?) -> ()) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "GameFavoriteLocal")
         fetchRequest.fetchLimit = 1
-        fetchRequest.predicate = NSPredicate(format: "gameId == \(gameId)")
+        fetchRequest.predicate = NSPredicate(format: "id == \(id)")
         
         do {
             if let result = try
-//                self.container.viewContext.fetch(fetchRequest).first {
                 self.managedObjectContext.fetch(fetchRequest).first {
-                let gameFavorite = GameFavorite(gameId: result.value(forKeyPath: "gameId") as? Int32 ?? 0, gameName: result.value(forKeyPath: "gameName") as? String ?? "", gameRating: result.value(forKeyPath: "gameRating") as? Float ?? 0.0, gameReleased: result.value(forKeyPath: "gameReleased") as? String ?? "", gameDescription: result.value(forKey: "gameDescription") as? String ?? "", gameBackgroundImage: result.value(forKeyPath: "gameBackgroundImage") as? String ?? "", gameBackgroundImageAdditional: result.value(forKeyPath: "gameBackgroundImageAdditional") as? String ?? "")
+                let gameFavorite = GameFavorite(id: result.value(forKeyPath: "id") as? Int32 ?? 0, name: result.value(forKeyPath: "name") as? String ?? "", rating: result.value(forKeyPath: "rating") as? Float ?? 0.0, released: result.value(forKeyPath: "released") as? String ?? "", desc: result.value(forKey: "desc") as? String ?? "", backgroundImage: result.value(forKeyPath: "backgroundImage") as? String ?? "", backgroundImageAdditional: result.value(forKeyPath: "backgroundImageAdditional") as? String ?? "")
                 
                 DispatchQueue.main.async {
                     completion(gameFavorite)
                 }
             }
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+            print("Fetch Error : \(error), \(error.userInfo)")
         }
     }
     
-    func getAllGameFavorite() -> [GameFavoriteLocal] {
+    func selectAllGameFavorite() -> [GameFavoriteLocal] {
         var gameFavorite = [GameFavoriteLocal]()
         let postRequest: NSFetchRequest<GameFavoriteLocal> = GameFavoriteLocal.fetchRequest()
         
         do {
-//            gameFavorite = try self.container.viewContext.fetch(postRequest)
             gameFavorite = try self.managedObjectContext.fetch(postRequest)
         } catch let error as NSError {
             print(error)

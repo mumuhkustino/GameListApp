@@ -5,7 +5,6 @@
 //  Created by C-70 on 09/01/22.
 //
 
-import Foundation
 import SwiftUI
 import CoreData
 
@@ -16,8 +15,8 @@ extension Float {
 }
 
 extension NSManagedObjectContext {
-    static var current: NSManagedObjectContext{
-        return PersistenceContainer.persistentContainer.viewContext
+    static var mocCurrent: NSManagedObjectContext{
+        return PersistenceContainer.containerHelper.viewContext
     }
 }
 

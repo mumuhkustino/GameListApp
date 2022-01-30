@@ -16,9 +16,9 @@ class GameDetailViewModel: ObservableObject {
         self.serviceProtocol = serviceProtocol
     }
     
-    func loadGameDataById(id: String) {
+    func loadGameDetail(gameId: String) {
         self.loading = true
-        serviceProtocol.fetchGameById(gameId: id) { gameDetail in
+        serviceProtocol.fetchGameDetail(gameId: gameId) { gameDetail in
             guard let gameDetail = gameDetail else {
                 return
             }

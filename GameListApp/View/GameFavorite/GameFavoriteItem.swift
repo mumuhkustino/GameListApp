@@ -9,10 +9,10 @@ import SwiftUI
 
 struct GameFavoriteItem: View {
     
-    var game: GameFavoriteViewModel
+    var viewModel: GameFavoriteViewModel
     var body: some View {
         HStack(alignment: .center) {
-            AsyncImage(url: URL(string:  "\(game.gameFavorite.gameBackgroundImage ?? "")")!) { image in
+            AsyncImage(url: URL(string:  "\(viewModel.gameFavorite.backgroundImage ?? "")")!) { image in
                 image.resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 100, height: 120).cornerRadius(10)
@@ -21,7 +21,7 @@ struct GameFavoriteItem: View {
             }
             
             VStack(alignment: .leading) {
-                Text(game.gameFavorite.gameName ?? "")
+                Text(viewModel.gameFavorite.name ?? "")
                     .foregroundColor(.blue)
                     .lineLimit(2)
                     .font(Font.system(size:22))
@@ -30,14 +30,14 @@ struct GameFavoriteItem: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(Color.yellow)
                         .frame(width: 20.0, height: 20.0)
-                    Text(game.gameFavorite.gameRating.format())
+                    Text(viewModel.gameFavorite.rating.format())
                         .foregroundColor(Color.black)
                         .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 0))
                     Spacer()
                     Image(systemName: "calendar")
                         .foregroundColor(Color.blue)
                         .frame(width: 40.0, height: 20.0)
-                    Text(game.gameFavorite.gameReleased ?? "").foregroundColor(.black)
+                    Text(viewModel.gameFavorite.released ?? "").foregroundColor(.black)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 8))
                 }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
