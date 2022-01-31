@@ -14,7 +14,7 @@ public class PersistenceContainer {
     private init() {
     }
     public static var containerHelper: NSPersistentContainer = {
-        let ctr = NSPersistentContainer(name: "GameList")
+        let ctr = NSPersistentContainer(name: "GameList 2")
         ctr.loadPersistentStores(completionHandler: { (d, e) in
             if let e = e as NSError? {
                 fatalError("Catch Error : \(e), \(e.userInfo)")
